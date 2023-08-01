@@ -47,7 +47,7 @@ def name_surface_file(args, dir_file):
 
 
 def setup_surface_file(args, surf_file, dir_file):
-    # skip if the direction file already exists
+    # skip if the surface file already exists
     if os.path.exists(surf_file):
         f = h5py.File(surf_file, 'r')
         if (args.y and 'ycoordinates' in f.keys()) or 'xcoordinates' in f.keys():
@@ -59,11 +59,11 @@ def setup_surface_file(args, surf_file, dir_file):
     f['dir_file'] = dir_file
 
     # Create the coordinates(resolutions) at which the function is evaluated
-    xcoordinates = np.linspace(args.xmin, args.xmax, num=args.xnum)
+    xcoordinates = np.linspace(args.xmin, args.xmax, num=int(args.xnum))
     f['xcoordinates'] = xcoordinates
 
     if args.y:
-        ycoordinates = np.linspace(args.ymin, args.ymax, num=args.ynum)
+        ycoordinates = np.linspace(args.ymin, args.ymax, num=int(args.ynum))
         f['ycoordinates'] = ycoordinates
     f.close()
 
@@ -295,7 +295,9 @@ if __name__ == '__main__':
     if args.plot and rank == 0:
         if args.y and args.proj_file:
             plot_2D.plot_contour_trajectory(surf_file, dir_file, args.proj_file, 'train_loss', args.show)
+            # plot_2D.plot_contour_trajectory(surf_file, dir_file, args.proj_file, 'test_loss', args.show)
         elif args.y:
             plot_2D.plot_2d_contour(surf_file, 'train_loss', args.vmin, args.vmax, args.vlevel, args.show)
+            # plot_2D.plot_2d_contour(surf_file, 'test_loss', args.vmin, args.vmax, args.vlevel, args.show)
         else:
             plot_1D.plot_1d_loss_err(surf_file, args.xmin, args.xmax, args.loss_max, args.log, args.show)
